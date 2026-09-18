@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\MahasiswaWebController;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MahasiswaController;
@@ -28,3 +30,5 @@ Route::get('/semester/{angka}', function (int $angka) {
 Route::get('/data-mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
 Route::get('/data-mahasiswa/{nim}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
 Route::get('/cari-mahasiswa', [MahasiswaController::class, 'cari']);
+Route::get('/mahasiswa-data', [MahasiswaWebController::class, 'index'])->name('mahasiswa.data');
+Route::get('/mahasiswa-data/{mahasiswa}', [MahasiswaWebController::class, 'show'])->name('mahasiswa.detail');

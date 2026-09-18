@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Mahasiswa;
+use App\Models\Matakuliah;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +17,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(ProgramStudiSeeder::class);
+        $this->call(MatakuliahSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Mahasiswa::factory()->count(30)->create();
+
+        $daftarMatakuliah = Matakuliah::all();
+
+        Mahasiswa::all()->each(function ($mahasiswa) use ($daftarMatakuliah) {
+            $diambil = $daftarMatakuliah->random(rand(2, 4));
+
+            foreach ($diambil as $matakuliah) {
+                $mahasiswa->matakuliah()->attach($matakuliah->id, [
+                    'nilai' => fake()->randomFloat(2, 60, 100),
+                ]);
+            }
+        });
     }
 }
