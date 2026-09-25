@@ -1,0 +1,192 @@
+{
+  "info": {
+    "_postman_id": "88003a35-d9ee-467b-bc74-d53cd3bf6f46",
+    "name": "Pemweb2 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58490593",
+    "_collection_link": "https://go.postman.co/collection/58490593-88003a35-d9ee-467b-bc74-d53cd3bf6f46?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "List Mahasiswa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/mahasiswa?Accept=application/json",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa"
+          ],
+          "query": [
+            {
+              "key": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filter & Pagination",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/mahasiswa?angkatan=2023&per_halaman=5&urut=ipk&arah=desc",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa"
+          ],
+          "query": [
+            {
+              "key": "angkatan",
+              "value": "2023"
+            },
+            {
+              "key": "per_halaman",
+              "value": "5"
+            },
+            {
+              "key": "urut",
+              "value": "ipk"
+            },
+            {
+              "key": "arah",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Detail Mahasiswa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/mahasiswa/10?Accept=application/json",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa",
+            "10"
+          ],
+          "query": [
+            {
+              "key": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tambah Mahasiswa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"program_studi_id\": 1,\r\n    \"nim\": \"H1A125999\",\r\n    \"nama\": \"Dewi Anggraini\",\r\n    \"email\": \"dewi.anggraini@example.com\",\r\n    \"angkatan\": 2025,\r\n    \"ipk\": 3.65\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/mahasiswa",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Mahasiswa",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"ipk\": 3.90}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/mahasiswa/10",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa",
+            "10"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Hapus Mahasiswa",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/mahasiswa/10",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "mahasiswa",
+            "10"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
