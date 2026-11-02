@@ -12,4 +12,5 @@ var Daftar = []Mahasiswa{
 	{ID: 1, Nim: "H1A123001", Nama: "Andi Prasetyo", Angkatan: 2023, Ipk: 3.45},
 	{ID: 2, Nim: "H1A123002", Nama: "Bunga Lestari", Angkatan: 2023, Ipk: 3.80},
 	{ID: 3, Nim: "H1A124003", Nama: "Citra Ramadhani", Angkatan: 2024, Ipk: 3.20},
+	{ID: 4, Nim: "H1H024021", Nama: "Alma Maida Wirastuti", Angkatan: 2024, Ipk: 3.75},
 }
