@@ -13,28 +13,37 @@ func Daftarkan(app *fiber.App) {
 	api.Get("/status", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"sukses": true,
-			"pesan":  "API berjalan",
+			"pesan":  "API Fiber aktif",
 		})
 	})
 
-	mahasiswa := api.Group("/mahasiswa", middleware.KunciApi())
+	api.Post("/auth/registrasi", handler.Registrasi)
+	api.Post("/auth/login", handler.Login)
+
+	terlindungi := api.Group("", middleware.Autentikasi())
+
+	terlindungi.Get("/auth/profil", handler.Profil)
+	terlindungi.Post("/auth/segarkan", handler.SegarkanToken)
+	terlindungi.Post("/auth/logout", handler.Logout)
+
+	mahasiswa := terlindungi.Group("/mahasiswa")
 
 	mahasiswa.Get("/", handler.DaftarMahasiswa)
-	mahasiswa.Post("/", handler.BuatMahasiswa)
 	mahasiswa.Get("/:id", handler.DetailMahasiswa)
-	mahasiswa.Put("/:id", handler.PerbaruiMahasiswa)
-	mahasiswa.Delete("/:id", handler.HapusMahasiswa)
-	mahasiswa.Post("/:id/pulihkan", handler.PulihkanMahasiswa)
+	mahasiswa.Post("/", middleware.HanyaPeran("admin", "dosen"), handler.BuatMahasiswa)
+	mahasiswa.Put("/:id", middleware.HanyaPeran("admin", "dosen"), handler.PerbaruiMahasiswa)
+	mahasiswa.Delete("/:id", middleware.HanyaPeran("admin"), handler.HapusMahasiswa)
+	mahasiswa.Post("/:id/pulihkan", middleware.HanyaPeran("admin"), handler.PulihkanMahasiswa)
 
-	matakuliah := api.Group("/matakuliah", middleware.KunciApi())
+	matakuliah := terlindungi.Group("/matakuliah")
 
 	matakuliah.Get("/", handler.DaftarMatakuliah)
-	matakuliah.Post("/", handler.BuatMatakuliah)
 	matakuliah.Get("/:id", handler.DetailMatakuliah)
-	matakuliah.Put("/:id", handler.PerbaruiMatakuliah)
-	matakuliah.Delete("/:id", handler.HapusMatakuliah)
+	matakuliah.Post("/", middleware.HanyaPeran("admin", "dosen"), handler.BuatMatakuliah)
+	matakuliah.Put("/:id", middleware.HanyaPeran("admin", "dosen"), handler.PerbaruiMatakuliah)
+	matakuliah.Delete("/:id", middleware.HanyaPeran("admin"), handler.HapusMatakuliah)
 
-	programStudi := api.Group("/program-studi", middleware.KunciApi())
+	programStudi := terlindungi.Group("/program-studi")
 
 	programStudi.Get("/", handler.DaftarProgramStudi)
 }

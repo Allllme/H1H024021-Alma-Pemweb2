@@ -15,7 +15,7 @@ import (
 
 func main() {
 	konf := config.Muat()
-	
+
 	config.HubungkanBasisData(konf)
 	config.Migrasi()
 	config.DataAwal()
@@ -50,6 +50,10 @@ func penanganGalat(c fiber.Ctx, err error) error {
 	if errors.As(err, &galatFiber) {
 		kode = galatFiber.Code
 		pesan = galatFiber.Message
+	}
+
+	if kode == fiber.StatusInternalServerError {
+		log.Println("Galat internal:", err.Error())
 	}
 
 	return c.Status(kode).JSON(fiber.Map{

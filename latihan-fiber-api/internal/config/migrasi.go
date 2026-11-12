@@ -7,7 +7,13 @@ import (
 )
 
 func Migrasi() {
-	err := DB.AutoMigrate(&model.ProgramStudi{}, &model.Mahasiswa{}, &model.Matakuliah{})
+	err := DB.AutoMigrate(
+		&model.ProgramStudi{},
+		&model.Mahasiswa{},
+		&model.Matakuliah{},
+		&model.Pengguna{},
+		&model.TokenDitolak{},
+	)
 	if err != nil {
 		log.Fatal("Gagal menjalankan migrasi: ", err)
 	}
