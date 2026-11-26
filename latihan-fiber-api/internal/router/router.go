@@ -1,7 +1,10 @@
 package router
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 
 	"latihan-fiber-api/internal/handler"
 	"latihan-fiber-api/internal/middleware"
@@ -9,6 +12,14 @@ import (
 
 func Daftarkan(app *fiber.App) {
 	api := app.Group("/api")
+
+	batasLogin := limiter.New(limiter.Config{
+		Max:        5,
+		Expiration: time.Minute,
+		LimitReached: func(c fiber.Ctx) error {
+			return fiber.NewError(fiber.StatusTooManyRequests, "Terlalu banyak percobaan login, coba lagi dalam satu menit")
+		},
+	})
 
 	api.Get("/status", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
@@ -18,7 +29,7 @@ func Daftarkan(app *fiber.App) {
 	})
 
 	api.Post("/auth/registrasi", handler.Registrasi)
-	api.Post("/auth/login", handler.Login)
+	api.Post("/auth/login", batasLogin, handler.Login)
 
 	terlindungi := api.Group("", middleware.Autentikasi())
 
