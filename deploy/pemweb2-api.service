@@ -1,0 +1,20 @@
+# Dipasang di server Linux pada /etc/systemd/system/pemweb2-api.service
+# Perintah aktivasi:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now pemweb2-api
+#   sudo systemctl status pemweb2-api
+
+[Unit]
+Description=Pemweb2 Fiber API
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/pemweb2-api
+ExecStart=/var/www/pemweb2-api/bin/api
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

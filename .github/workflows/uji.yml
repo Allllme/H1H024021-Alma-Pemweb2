@@ -1,0 +1,39 @@
+name: Uji Otomatis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  uji-go:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: latihan-fiber-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: latihan-fiber-api/go.mod
+      - run: go mod download
+      - run: go vet ./...
+      - run: go test ./... "-coverpkg=./..." -cover
+        env:
+          JWT_SECRET: rahasia-hanya-untuk-uji
+
+  uji-laravel:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: latihan-laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, sqlite3
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env
+      - run: php artisan key:generate
+      - run: php artisan test

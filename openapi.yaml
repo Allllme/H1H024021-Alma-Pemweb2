@@ -1,0 +1,189 @@
+openapi: 3.0.3
+info:
+  title: API Praktikum Pemrograman Web II
+  description: Layanan pengelolaan data mahasiswa
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Server pengembangan Laravel
+  - url: http://localhost:3000/api
+    description: Server pengembangan Fiber
+paths:
+  /auth/login:
+    post:
+      summary: Masuk dan memperoleh token
+      description: Laravel membaca field password, Fiber membaca field kata_sandi.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputLogin'
+      responses:
+        '200':
+          description: Login berhasil
+        '401':
+          description: Email atau kata sandi tidak sesuai
+        '422':
+          description: Data gagal validasi
+  /mahasiswa:
+    get:
+      summary: Menampilkan daftar mahasiswa
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cari
+          in: query
+          schema:
+            type: string
+        - name: angkatan
+          in: query
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Nomor halaman (Laravel)
+          schema:
+            type: integer
+            default: 1
+        - name: halaman
+          in: query
+          description: Nomor halaman (Fiber)
+          schema:
+            type: integer
+            default: 1
+        - name: per_halaman
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Daftar mahasiswa berhasil diambil
+        '401':
+          description: Belum terautentikasi
+    post:
+      summary: Menambah data mahasiswa
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputMahasiswa'
+      responses:
+        '201':
+          description: Data berhasil dibuat
+        '401':
+          description: Belum terautentikasi
+        '403':
+          description: Peran tidak berwenang
+        '422':
+          description: Data gagal validasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalatValidasi'
+  /mahasiswa/{id}:
+    get:
+      summary: Menampilkan satu data mahasiswa
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdMahasiswa'
+      responses:
+        '200':
+          description: Data ditemukan
+        '404':
+          description: Data tidak ditemukan
+    delete:
+      summary: Menghapus data mahasiswa
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdMahasiswa'
+      responses:
+        '200':
+          description: Data berhasil dihapus
+        '403':
+          description: Peran tidak berwenang
+        '404':
+          description: Data tidak ditemukan
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    IdMahasiswa:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  schemas:
+    InputLogin:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@unsoed.ac.id
+        password:
+          type: string
+          description: Kata sandi untuk backend Laravel
+        kata_sandi:
+          type: string
+          description: Kata sandi untuk backend Fiber
+    InputMahasiswa:
+      type: object
+      required:
+        - program_studi_id
+        - nim
+        - nama
+        - email
+        - angkatan
+      properties:
+        program_studi_id:
+          type: integer
+          example: 1
+        nim:
+          type: string
+          example: H1A125001
+        nama:
+          type: string
+          example: Eko Saputra
+        email:
+          type: string
+          format: email
+        angkatan:
+          type: integer
+          example: 2025
+        ipk:
+          type: number
+          format: float
+          example: 3.55
+    GalatValidasi:
+      type: object
+      description: Bentuk galat Fiber. Laravel memakai message dan errors.
+      properties:
+        sukses:
+          type: boolean
+          example: false
+        pesan:
+          type: string
+          example: Data yang dikirim tidak valid
+        galat:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: Nim
+              pesan:
+                type: string
+                example: Field ini wajib diisi
